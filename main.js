@@ -22,7 +22,8 @@ const camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
 camera.position.z = 2
 
 const controls = new OrbitControls(camera,renderer.domElement)
-
+controls.enableDamping = true
+controls.dampingFactor = 0.03
 
 const scene = new THREE.Scene()
 
@@ -46,6 +47,7 @@ const sphere2 = new THREE.Mesh(geo2,material2)
 scene.add(sphere2)
 
 const sphere = new THREE.Mesh(geo,material)
+// sphere.add(sphere2)
 scene.add(sphere)
 
 const light = new THREE.HemisphereLight(0xffff00,0xffff00)
@@ -55,10 +57,11 @@ scene.add(light)
 function animate(t=0){
   requestAnimationFrame(animate)
   // sphere.rotateY(t*0.00001)
+  controls.update()
   renderer.render(scene,camera);
 }
 
-// animate()
+animate()
 
-renderer.render(scene,camera);
+// renderer.render(scene,camera);
 
