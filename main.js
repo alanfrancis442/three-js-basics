@@ -1,5 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import * as dat from "dat.gui";
+
+const gui = new dat.GUI()
 
 //three js needs render camera and a scene
 
@@ -19,7 +22,7 @@ const near = 0.1
 const far = 10
 
 const camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
-camera.position.z = 2
+camera.position.z = 3
 
 const controls = new OrbitControls(camera,renderer.domElement)
 controls.enableDamping = true
@@ -29,34 +32,58 @@ const scene = new THREE.Scene()
 
 //creating a geometry
 
-const geo = new THREE.SphereGeometry(0.8,16,16)
-const material = new THREE.MeshBasicMaterial(
-  {
-    color:'white' ,
-    wireframe:true
-  }
+// const material = new THREE.MeshNormalMaterial()
+// const material  = new THREE.MeshLambertMaterial()
+// material.wireframe = true
+// const material = new THREE.MeshPhongMaterial()
+// material.wireframe = true
+// material.shininess = 1000
+// material.specular = new THREE.Color(0x1188ff)
+
+//baseMaterial
+const material = new THREE.MeshStandardMaterial()
+material.roughness = 0.5
+material.metalness = 0.9
+
+//tweaking mateiral
+gui.add(material,'metalness').min(0).max(1).step(0.001)
+gui.add(material,'roughness').min(0).max(1).step(0.001)
+
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry( 0.5, 32, 16 ),
+  material
 )
 
-const geo2 = new THREE.IcosahedronGeometry(0.8,2)
-const material2 = new THREE.MeshStandardMaterial({
-  color:'red',
+const box = new THREE.Mesh(
+  new THREE.BoxGeometry(0.5,1,1),
+  material
+)
+box.position.x +=2
+//tweaking position
 
-})
+scene.add(box)
 
-const sphere2 = new THREE.Mesh(geo2,material2)
-scene.add(sphere2)
-
-const sphere = new THREE.Mesh(geo,material)
-// sphere.add(sphere2)
 scene.add(sphere)
 
-const light = new THREE.HemisphereLight(0xffff00,0xffff00)
-scene.add(light)
+const geometry = new THREE.TorusGeometry( 0.5, 0.2, 16, 100 );  
+const torus = new THREE.Mesh( geometry, material );
+torus.position.x -=2
+scene.add( torus );
 
+
+const ambiLight = new THREE.AmbientLight()
+scene.add(ambiLight)
+const pointLight =  new THREE.PointLight( 0xff0000, 5, 100)
+pointLight.position.set(0,1,1.5)
+scene.add(pointLight)
+// dirLight = new THREE.DirectionalLight()
+// scene.add(dirLight)
 
 function animate(t=0){
   requestAnimationFrame(animate)
-  // sphere.rotateY(t*0.00001)
+  sphere.rotateY(0.003)
+  box.rotateZ(0.003)
+  torus.rotateX(0.003)
   controls.update()
   renderer.render(scene,camera);
 }
