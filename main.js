@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import { OrbitControls, RectAreaLightHelper } from 'three/examples/jsm/Addons.js'
 import * as dat from "dat.gui";
 
 const gui = new dat.GUI()
@@ -71,13 +71,30 @@ torus.position.x -=2
 scene.add( torus );
 
 
-const ambiLight = new THREE.AmbientLight()
+const ambiLight = new THREE.AmbientLight(0xffffff)
+gui.add(ambiLight,"intensity").min(0).max(5).step(0.0001)
 scene.add(ambiLight)
-const pointLight =  new THREE.PointLight( 0xff0000, 5, 100)
-pointLight.position.set(0,1,1.5)
-scene.add(pointLight)
-// dirLight = new THREE.DirectionalLight()
-// scene.add(dirLight)
+
+// const pointLight =  new THREE.PointLight( 0xff0000, 5, 100)
+// pointLight.position.set(0,1,1.5)
+// scene.add(pointLight)
+const dirLight = new THREE.DirectionalLight()
+dirLight.position.set(0.5,1,1)
+scene.add(dirLight)
+const dirLightHelper = new THREE.DirectionalLightHelper(dirLight)
+scene.add(dirLightHelper)
+
+const rectLight = new THREE.RectAreaLight(0x4e00ff,2,2,2)
+rectLight.position.set(0,0,2)
+scene.add(rectLight)
+const rectLightHelper = new RectAreaLightHelper(rectLight)
+scene.add(rectLightHelper)
+
+const spotLight = new THREE.SpotLight(0xff0000,5,1,Math.PI*0.1)
+scene.add(spotLight)
+gui.add(spotLight,'angle').min(0).max(180).step(0.001)
+const spotLightHelper = new THREE.SpotLightHelper(spotLight)
+scene.add(spotLightHelper)
 
 function animate(t=0){
   requestAnimationFrame(animate)
