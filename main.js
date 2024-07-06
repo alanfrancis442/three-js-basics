@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 
+import testfragement from './shaders/fragment.glsl'
+import testvertex from './shaders/vertex.glsl'
+
 //three js needs render camera and a scene
 
 const height = window.innerHeight
@@ -27,31 +30,19 @@ controls.dampingFactor = 0.03
 
 const scene = new THREE.Scene()
 
-//creating a geometry
-
-const geo = new THREE.SphereGeometry(0.8,16,16)
-const material = new THREE.MeshBasicMaterial(
-  {
-    color:'white' ,
-    wireframe:true
-  }
-)
-
-const geo2 = new THREE.IcosahedronGeometry(0.8,2)
-const material2 = new THREE.MeshStandardMaterial({
-  color:'red',
-
+//creating a mateial with shader
+const material = new THREE.RawShaderMaterial({
+  vertexShader:testvertex,
+  fragmentShader:testfragement
 })
 
-const sphere2 = new THREE.Mesh(geo2,material2)
-scene.add(sphere2)
 
-const sphere = new THREE.Mesh(geo,material)
-// sphere.add(sphere2)
-scene.add(sphere)
+//creating a geometry
+// const material = new THREE.MeshBasicMaterial({color:0x00ff00,side:THREE.DoubleSide})
 
-const light = new THREE.HemisphereLight(0xffff00,0xffff00)
-scene.add(light)
+const planegeo = new THREE.PlaneGeometry()
+const plane = new THREE.Mesh(planegeo,material)
+scene.add(plane)
 
 
 function animate(t=0){
