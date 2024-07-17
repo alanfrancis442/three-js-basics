@@ -1,6 +1,10 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
+// import  Dat  from "three-dat.gui";
+// import init from 'three-dat.gui';
+// init(Dat);
 
+// var gui = new Dat.GUI();
 //three js needs render camera and a scene
 
 const height = window.innerHeight
@@ -19,7 +23,7 @@ const near = 0.1
 const far = 10
 
 const camera = new THREE.PerspectiveCamera(fov,aspect,near,far)
-camera.position.z = 2
+camera.position.z = 4
 
 const controls = new OrbitControls(camera,renderer.domElement)
 controls.enableDamping = true
@@ -29,30 +33,40 @@ const scene = new THREE.Scene()
 
 //creating a geometry
 
-const geo = new THREE.SphereGeometry(0.8,16,16)
-const material = new THREE.MeshBasicMaterial(
+const geo = new THREE.SphereGeometry(1,16,16)
+const material = new THREE.MeshStandardMaterial(
   {
-    color:'white' ,
-    wireframe:true
+    color:'red' ,
+    flatShading:true,
   }
 )
-
-const geo2 = new THREE.IcosahedronGeometry(0.8,2)
-const material2 = new THREE.MeshStandardMaterial({
-  color:'red',
-
-})
-
-const sphere2 = new THREE.Mesh(geo2,material2)
-scene.add(sphere2)
 
 const sphere = new THREE.Mesh(geo,material)
 // sphere.add(sphere2)
 scene.add(sphere)
 
-const light = new THREE.HemisphereLight(0xffff00,0xffff00)
-scene.add(light)
+const planeGeometry = new THREE.PlaneGeometry(5, 5); 
 
+const planeMaterial = new THREE.MeshStandardMaterial({
+  color: 'white', 
+  side: THREE.DoubleSide,
+});
+
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+plane.rotation.x = Math.PI / 2; 
+plane.position.y = -1; 
+
+scene.add(plane);
+
+const light = new THREE.AmbientLight()
+scene.add(light)
+const directionalLight = new THREE.DirectionalLight(0xffffff,1)
+directionalLight.position.set(1.5,1,0)
+scene.add(directionalLight)
+
+const dirlighthelper = new THREE.DirectionalLightHelper(directionalLight,0.2)
+scene.add(dirlighthelper)
 
 function animate(t=0){
   requestAnimationFrame(animate)
