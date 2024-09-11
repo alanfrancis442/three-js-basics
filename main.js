@@ -84,6 +84,7 @@ function animate(t=0){
   sphere.rotateY(0.003)
   box.rotateZ(0.003)
   torus.rotateX(0.003)
+  torus.rotateY(0.003)
   controls.update()
   renderer.render(scene,camera);
 }
