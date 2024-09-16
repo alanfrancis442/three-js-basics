@@ -30,13 +30,18 @@ controls.dampingFactor = 0.03
 
 const scene = new THREE.Scene()
 
+//loading texture
+const texture = new THREE.TextureLoader().load('/flag.jpeg');
+// console.log('texture',texture);
+
 //creating a mateial with shader
 const material = new THREE.RawShaderMaterial({
   vertexShader:testvertex,
   fragmentShader:testfragement,
   uniforms:{
-    uFrequency:{value:new THREE.Vector2(10,5)},
+    uFrequency:{value:new THREE.Vector2(5,2)},
     uTime:{value:0},
+    uTexture:{value:texture}
   },
 })
 
