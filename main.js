@@ -35,14 +35,10 @@ const texture = new THREE.TextureLoader().load('/flag.jpeg');
 // console.log('texture',texture);
 
 //creating a mateial with shader
-const material = new THREE.RawShaderMaterial({
+const material = new THREE.ShaderMaterial({
   vertexShader:testvertex,
   fragmentShader:testfragement,
-  uniforms:{
-    uFrequency:{value:new THREE.Vector2(5,2)},
-    uTime:{value:0},
-    uTexture:{value:texture}
-  },
+  side:THREE.DoubleSide,  
 })
 
 
@@ -51,17 +47,12 @@ const material = new THREE.RawShaderMaterial({
 
 const planegeo = new THREE.PlaneGeometry(4, 4, 50, 50)
 const plane = new THREE.Mesh(planegeo,material)
-plane.doubleSided = true;
+plane.rotation.x = -Math.PI / 10;
+plane.rotation.y = -Math.PI / 10; 
 scene.add(plane)
 
 const count = plane.geometry.attributes.position.count
 // console.log(count);
-const randoms = new Float32Array(count)
-for(let i = 0; i<count;i++){
-  randoms[i] = Math.random()
-}
-//adding a attribute to the geometry
-planegeo.setAttribute('aRandom',new THREE.BufferAttribute(randoms,1))
 
 //creating clock object
 const clock = new THREE.Clock()
@@ -71,13 +62,16 @@ const clock = new THREE.Clock()
 const light = new THREE.AmbientLight(0xffffff)
 scene.add(light)
 
+const axishelper = new THREE.AxesHelper()
+scene.add(axishelper)
 function animate(t=0){
   requestAnimationFrame(animate)
   // sphere.rotateY(t*0.00001)
   // plane.rotateY(0.005)
+  // plane.rotation.x += 0.01
+  // plane.rotation.y += 0.01
   let ellapsedTime = clock.getElapsedTime()
   // console.log(ellapsedTime);
-  material.uniforms.uTime.value = ellapsedTime
   controls.update()
   renderer.render(scene,camera);
 }
