@@ -2,12 +2,16 @@ import * as THREE from "three";
 // import { OrbitControls } from 'three/examples/jsm/Addons.js'
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import studio from "@theatre/studio";
+import { getProject, types } from "@theatre/core";
 
 import testfragement from "./shaders/fragment.glsl";
 import testvertex from "./shaders/vertex.glsl";
 
 gsap.registerPlugin(ScrollTrigger);
-
+studio.initialize();
+const project = getProject("THREE.js x Theatre.js");
+const sheet = project.sheet("Animated scene");
 //three js needs render camera and a scene
 
 const height = window.innerHeight;
@@ -69,6 +73,23 @@ scene.add(light);
 
 const axishelper = new THREE.AxesHelper();
 scene.add(axishelper);
+
+const torusKnotObj = sheet.object("Torus Knot", {
+  // Note that the rotation is in radians
+  // (full rotation: 2 * Math.PI)
+  rotation: types.compound({
+    x: types.number(plane.rotation.x, { range: [-2, 2] }),
+    y: types.number(plane.rotation.y, { range: [-2, 2] }),
+    z: types.number(plane.rotation.z, { range: [-2, 2] }),
+  }),
+});
+
+torusKnotObj.onValuesChange((values) => {
+  const { x, y, z } = values.rotation;
+
+  plane.rotation.set(x * Math.PI, y * Math.PI, z * Math.PI);
+});
+
 function animate(t = 0) {
   requestAnimationFrame(animate);
   // sphere.rotateY(t*0.00001)
@@ -98,7 +119,7 @@ function init() {
   });
   tl.to(planeGroup.rotation, {
     duration: 1,
-    y: Math.PI * 2,
+    y: -0.3141592653589793,
     ease: "power4.inOut",
   });
 }
