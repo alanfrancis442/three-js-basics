@@ -10,7 +10,8 @@ void main(){
         // strenght = step(0.8,strenght);
         // float strenght  = mod(vUv.x*10.0,1.0);
         // strenght = step(0.8,strenght);
-        float strenght = step(0.8,mod(vUv.x*10.0,1.0));
-        strenght+=step(0.8,mod(vUv.y*10.0,1.0));
-        gl_FragColor = vec4(strenght,strenght, strenght, 1.0);
+        // float strenght = step(0.8,mod(vUv.x*10.0,1.0));
+        // strenght+=step(0.8,mod(vUv.y*10.0,1.0));
+        // gl_FragColor = vec4(strenght,strenght, strenght, 1.0);
+        gl_FragColor = vec4(vUv.x, vUv.y, 0.0, 1.0);
 }
